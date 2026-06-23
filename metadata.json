@@ -1,0 +1,6 @@
+{
+  "name": "FREY",
+  "description": "An interactive premium corporate showcase application for FREY, an elite software development group showcasing live portfolios, team roles, and creative metrics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

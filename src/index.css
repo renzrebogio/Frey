@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Anton&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-anton: "Anton", sans-serif;
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+}
+
+/* ── Gilded Dark Design Tokens ── */
+:root {
+  /* Obsidian backgrounds */
+  --color-obsidian:       #09090B;
+  --color-ink:            #111114;
+  --color-charcoal:       #1C1C20;
+
+  /* Silver scale */
+  --color-silver-dim:     #6B7280;
+  --color-silver:         #9CA3AF;
+  --color-silver-bright:  #D1D5DB;
+
+  /* Gold scale */
+  --color-gold-muted:     #92712A;
+  --color-gold:           #C9963A;
+  --color-gold-bright:    #E8B84B;
+  --color-gold-glow:      #F5D27A;
+
+  /* White scale */
+  --color-white-pure:     #F8F8F6;
+  --color-white-dim:      rgba(248, 248, 246, 0.7);
+
+  /* Gradient utilities */
+  --gradient-gold: radial-gradient(ellipse at center, rgba(201,150,58,0.12) 0%, transparent 70%);
+  --gradient-gold-linear: linear-gradient(135deg, #C9963A, #E8B84B, #C9963A);
+
+  scroll-behavior: smooth;
+}
+
+/* ── Global dark background ── */
+html {
+  background-color: var(--color-obsidian);
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-obsidian);
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: clip;
+}
+
+#root {
+  background-color: var(--color-obsidian);
+  min-height: 100svh;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+/* ── Section z-stacking above fixed canvas ── */
+section,
+header,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Safe area insets for notch devices ── */
+.hero-height {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Touch interaction improvements ── */
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* ── GPU Hardware Acceleration helper ── */
+.gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+/* ── Gold glow pulse animation ── */
+@keyframes gold-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    box-shadow: 0 0 12px var(--color-gold);
+  }
+  50% {
+    opacity: 0.9;
+    box-shadow: 0 0 28px var(--color-gold-bright), 0 0 50px var(--color-gold-muted);
+  }
+}
+
+/* ── Gold shimmer sweep (for headings) ── */
+@keyframes gold-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.gold-shimmer-text {
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-muted) 0%,
+    var(--color-gold-glow) 40%,
+    var(--color-gold-bright) 50%,
+    var(--color-gold-glow) 60%,
+    var(--color-gold-muted) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 4s linear infinite;
+}
+
+/* ── Star twinkle for celestial background ── */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.5); }
+}
+
+/* ── PCB pulse ring animation (legacy — keep for FreyTransition) ── */
+@keyframes pcb-pulse {
+  0%   { transform: scale(1);   opacity: 0.4; }
+  100% { transform: scale(4);   opacity: 0; }
+}
+
+/* ── Scan-line sweep (ProjectsSection) ── */
+@keyframes scanline-sweep {
+  0%   { top: 0; }
+  100% { top: 100%; }
+}
+
+/* ── Status dot pulse ── */
+@keyframes pulse-status {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* ── Gold border hover glow utility ── */
+.gold-border-card {
+  border: 1px solid rgba(201, 150, 58, 0.1);
+  transition: border-color 300ms ease, box-shadow 300ms ease;
+}
+.gold-border-card:hover {
+  border-color: rgba(201, 150, 58, 0.35);
+  box-shadow: 0 0 24px rgba(201, 150, 58, 0.1);
+}
+
+/* ── Cormorant display utility ── */
+.font-cormorant {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
