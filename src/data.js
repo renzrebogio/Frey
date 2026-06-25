@@ -103,9 +103,9 @@ export const PROJECTS = [
 ];
 
 // Gold accent color — shared globally across all components
-export const GOLD = '#C9963A';
-export const GOLD_BRIGHT = '#E8B84B';
-export const GOLD_GLOW = '#F5D27A';
+export const GOLD = '#e8a120';
+export const GOLD_BRIGHT = '#e8b84b';
+export const GOLD_GLOW = '#f0c040';
 
 export const IMAGES = [
   {

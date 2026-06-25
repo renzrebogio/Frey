@@ -1,37 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Anton&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-anton: "Anton", sans-serif;
+  --font-sans:      "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-anton:     "Anton", sans-serif;
+  --font-bebas:     "Bebas Neue", "Anton", sans-serif;
   --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-mono-code: "JetBrains Mono", "Courier New", monospace;
 }
 
 /* ── Gilded Dark Design Tokens ── */
 :root {
   /* Obsidian backgrounds */
-  --color-obsidian:       #09090B;
-  --color-ink:            #111114;
-  --color-charcoal:       #1C1C20;
+  --color-obsidian:      #0a0a0a;
+  --color-ink:           #111111;
+  --color-charcoal:      #1C1C20;
 
   /* Silver scale */
-  --color-silver-dim:     #6B7280;
-  --color-silver:         #9CA3AF;
-  --color-silver-bright:  #D1D5DB;
+  --color-silver-dim:    #6B7280;
+  --color-silver:        #9CA3AF;
+  --color-silver-bright: #c0c0c0;
 
-  /* Gold scale */
-  --color-gold-muted:     #92712A;
-  --color-gold:           #C9963A;
-  --color-gold-bright:    #E8B84B;
-  --color-gold-glow:      #F5D27A;
+  /* Gold scale — primary: #e8a120 (brief spec) */
+  --color-gold-muted:    #a86a10;
+  --color-gold:          #e8a120;
+  --color-gold-bright:   #e8b84b;
+  --color-gold-glow:     #f5c040;
 
   /* White scale */
-  --color-white-pure:     #F8F8F6;
-  --color-white-dim:      rgba(248, 248, 246, 0.7);
+  --color-white-pure:    #F8F8F6;
+  --color-white-dim:     rgba(248, 248, 246, 0.7);
+
+  /* Team member accent colors — for dots/borders only, never dominant */
+  --color-member-renz:      #e82d3b;
+  --color-member-randel:    #e8612d;
+  --color-member-grazielle: #2de89a;
+  --color-member-elijah:    #2d6ae8;
 
   /* Gradient utilities */
-  --gradient-gold: radial-gradient(ellipse at center, rgba(201,150,58,0.12) 0%, transparent 70%);
-  --gradient-gold-linear: linear-gradient(135deg, #C9963A, #E8B84B, #C9963A);
+  --gradient-gold: radial-gradient(ellipse at center, rgba(232,161,32,0.12) 0%, transparent 70%);
+  --gradient-gold-linear: linear-gradient(135deg, #e8a120, #e8b84b, #e8a120);
 
   scroll-behavior: smooth;
 }
@@ -85,7 +93,12 @@ button, a, [role="button"] {
   backface-visibility: hidden;
 }
 
-/* ── Gold glow pulse animation ── */
+/* ── Font utilities ── */
+.font-bebas     { font-family: "Bebas Neue", "Anton", sans-serif; }
+.font-cormorant { font-family: "Cormorant Garamond", Georgia, serif; }
+.font-mono-code { font-family: "JetBrains Mono", "Courier New", monospace; }
+
+/* ── Gold glow pulse — signature ambient glow ── */
 @keyframes gold-pulse {
   0%, 100% {
     opacity: 0.4;
@@ -97,19 +110,35 @@ button, a, [role="button"] {
   }
 }
 
+/* ── Slow glow pulse — for FreyTransition FREY text ── */
+@keyframes glow-pulse-slow {
+  0%, 100% {
+    text-shadow:
+      0 0 30px rgba(232,161,32,0.6),
+      0 0 80px rgba(232,161,32,0.25),
+      0 0 140px rgba(232,161,32,0.1);
+  }
+  50% {
+    text-shadow:
+      0 0 50px rgba(232,184,75,0.9),
+      0 0 120px rgba(232,161,32,0.5),
+      0 0 200px rgba(232,161,32,0.2);
+  }
+}
+
 /* ── Gold shimmer sweep (for headings) ── */
 @keyframes gold-shimmer {
   0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  100% { background-position:  200% center; }
 }
 
 .gold-shimmer-text {
   background: linear-gradient(
     90deg,
     var(--color-gold-muted) 0%,
-    var(--color-gold-glow) 40%,
+    var(--color-gold-glow)  40%,
     var(--color-gold-bright) 50%,
-    var(--color-gold-glow) 60%,
+    var(--color-gold-glow)  60%,
     var(--color-gold-muted) 100%
   );
   background-size: 200% auto;
@@ -143,17 +172,41 @@ button, a, [role="button"] {
   50%       { opacity: 0.5; transform: scale(0.85); }
 }
 
+/* ── Terminal cursor blink ── */
+@keyframes terminal-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.terminal-cursor {
+  animation: terminal-blink 0.6s step-end 3;
+}
+
+/* ── Radar sweep reveal ── */
+@keyframes radar-sweep {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(100vh); opacity: 0.3; }
+}
+
+/* ── Scroll progress breath ── */
+@keyframes scroll-breath {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.65; }
+}
+
 /* ── Gold border hover glow utility ── */
 .gold-border-card {
-  border: 1px solid rgba(201, 150, 58, 0.1);
+  border: 1px solid rgba(232, 161, 32, 0.1);
   transition: border-color 300ms ease, box-shadow 300ms ease;
 }
 .gold-border-card:hover {
-  border-color: rgba(201, 150, 58, 0.35);
-  box-shadow: 0 0 24px rgba(201, 150, 58, 0.1);
+  border-color: rgba(232, 161, 32, 0.35);
+  box-shadow: 0 0 24px rgba(232, 161, 32, 0.1);
 }
 
-/* ── Cormorant display utility ── */
-.font-cormorant {
-  font-family: "Cormorant Garamond", Georgia, serif;
+/* ── Scroll indicator pulse ── */
+@keyframes scroll-indicator {
+  0%   { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+  50%  { opacity: 0.8; transform: translateX(-50%) translateY(6px); }
+  100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
 }

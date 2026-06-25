@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { IMAGES } from './data.js';
+import { motion, useScroll } from 'motion/react';
 
 // Component imports
 import { Splash } from './components/Splash.jsx';
 import { Navbar } from './components/Navbar.jsx';
 import { HeroSection } from './components/HeroSection.jsx';
 import { Capabilities } from './components/Capabilities.jsx';
+import { TeamSection } from './components/TeamSection.jsx';
 import { ProjectsSection } from './components/ProjectsSection.jsx';
 import { ContactSection } from './components/ContactSection.jsx';
 import { Footer } from './components/Footer.jsx';
@@ -13,15 +14,14 @@ import { CelestialCanvas } from './components/DensePcbCanvas.jsx';
 import { FreyTransition } from './components/FreyTransition.jsx';
 
 export default function App() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
   const [showSplash, setShowSplash] = useState(true);
 
   // Navigation states
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Scroll Progress Thread
+  const { scrollYProgress } = useScroll();
 
   // Always reset scroll position to topmost part of the page on refresh
   useEffect(() => {
@@ -68,130 +68,14 @@ export default function App() {
     };
   }, []);
 
-  // Preload images on mount
-  useEffect(() => {
-    IMAGES.forEach((item) => {
-      const img = new Image();
-      img.src = item.src;
-    });
-  }, []);
-
-  // Responsive boundary check + set --hero-vh CSS variable for mobile viewport fix
-  useEffect(() => {
-    const updateVH = () => {
-      const vh = window.visualViewport
-        ? window.visualViewport.height * 0.01
-        : window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--hero-vh', `${vh}px`);
-      setIsMobile(window.innerWidth < 640);
-    };
-
-    updateVH();
-
-    window.addEventListener('resize', updateVH, { passive: true });
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateVH);
-      window.visualViewport.addEventListener('scroll', updateVH);
-    }
-
-    return () => {
-      window.removeEventListener('resize', updateVH);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateVH);
-        window.visualViewport.removeEventListener('scroll', updateVH);
-      }
-    };
-  }, []);
-
-  // Carousel navigation timing lock
-  const navigate = (direction) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-
-    setActiveIndex((prev) => {
-      if (direction === 'next') {
-        return (prev + 1) % 4;
-      } else {
-        return (prev + 3) % 4;
-      }
-    });
-
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 650);
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') {
-        navigate('prev');
-      } else if (e.key === 'ArrowRight') {
-        navigate('next');
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isAnimating]);
-
-  // Derived carousel roles
-  const getRole = (index) => {
-    if (index === activeIndex) return 'center';
-    if (index === (activeIndex + 3) % 4) return 'left';
-    if (index === (activeIndex + 1) % 4) return 'right';
-    return 'back';
-  };
-
-  // Carousel positioning/transform styles
-  const getRoleStyles = (role) => {
-    switch (role) {
-      case 'center':
-        return {
-          transform: `translateX(-50%) scale(${isMobile ? 0.95 : 1.25})`,
-          filter: 'blur(0px)',
-          opacity: 1,
-          zIndex: 20,
-          left: '50%',
-          height: isMobile ? '46%' : '72%',
-          bottom: isMobile ? '26%' : '3%',
-        };
-      case 'left':
-        return {
-          transform: 'translateX(-50%) scale(0.8)',
-          filter: 'blur(2px)',
-          opacity: 0.85,
-          zIndex: 10,
-          left: isMobile ? '18%' : '30%',
-          height: isMobile ? '11%' : '20%',
-          bottom: isMobile ? '34%' : '14%',
-        };
-      case 'right':
-        return {
-          transform: 'translateX(-50%) scale(0.8)',
-          filter: 'blur(2px)',
-          opacity: 0.85,
-          zIndex: 10,
-          left: isMobile ? '82%' : '70%',
-          height: isMobile ? '11%' : '20%',
-          bottom: isMobile ? '34%' : '14%',
-        };
-      case 'back':
-        return {
-          transform: 'translateX(-50%) scale(0.8)',
-          filter: 'blur(4px)',
-          opacity: 1,
-          zIndex: 5,
-          left: '50%',
-          height: isMobile ? '8%' : '15%',
-          bottom: isMobile ? '34%' : '14%',
-        };
-    }
-  };
-
   return (
     <>
+      {/* Scroll Progress Thread */}
+      <motion.div
+        className="fixed top-0 right-0 w-[2px] h-full bg-[#e8a120] z-50 origin-top opacity-60"
+        style={{ scaleY: scrollYProgress }}
+      />
+
       {showSplash && (
         <Splash />
       )}
@@ -204,16 +88,12 @@ export default function App() {
 
       <CelestialCanvas />
 
-      <HeroSection
-        activeIndex={activeIndex}
-        isAnimating={isAnimating}
-        isMobile={isMobile}
-        navigate={navigate}
-        getRole={getRole}
-        getRoleStyles={getRoleStyles}
-      />
+      {/* Render Order: Hero -> Services -> Team -> Transition -> Projects -> Contact -> Footer */}
+      <HeroSection />
 
       <Capabilities />
+
+      <TeamSection />
 
       <FreyTransition />
 

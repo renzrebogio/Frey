@@ -1,10 +1,7 @@
 import { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { Mail, CheckCircle, Terminal, Send, Building2, HelpCircle } from 'lucide-react';
-
-const GOLD        = '#C9963A';
-const GOLD_BRIGHT = '#E8B84B';
-const GOLD_GLOW   = '#F5D27A';
+import { GOLD, GOLD_BRIGHT, GOLD_GLOW } from '../data';
 
 export function ContactSection() {
   const [name,        setName]        = useState('');
@@ -27,7 +24,7 @@ export function ContactSection() {
   const radarRotate  = useTransform(scrollYProgress, [0, 1], [0, 180]);
 
   const crosshairRotate  = useTransform(scrollYProgress, [0, 1], [-45, 45]);
-  const crosshairOpacity = useTransform(radarOpacity, (v) => v * 0.35);
+  const crosshairOpacity = useTransform(radarOpacity, (v) => v * 0.3);
 
   const leftColumnOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
   const leftColumnY       = useTransform(scrollYProgress, [0, 0.2], [80, 0]);
@@ -66,45 +63,57 @@ export function ContactSection() {
     setSubmitSuccess(false); setTerminalPayload(null);
   };
 
+  const inputStyle = {
+    backgroundColor: 'rgba(255,255,255,0.02)',
+    border: '1px solid rgba(232,161,32,0.15)',
+    borderRadius: '8px',
+    padding: '12px 16px',
+    width: '100%',
+    color: '#F8F8F6',
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'border-color 200ms ease',
+    fontFamily: "'Inter', sans-serif",
+  };
+
   return (
     <section
       ref={containerRef}
       id="contact"
-      className="relative w-full bg-transparent text-white py-24 sm:py-32 select-text overflow-hidden"
+      className="relative w-full bg-[#0a0a0a] text-white py-24 sm:py-32 select-text overflow-hidden"
       style={{
         fontFamily: "'Inter', sans-serif",
-        borderTop: '1px solid rgba(201,150,58,0.08)',
-        backgroundImage: `radial-gradient(circle at 85% 25%, rgba(201,150,58,0.04), transparent 40%), radial-gradient(circle at 10% 75%, rgba(146,113,42,0.03), transparent 50%)`,
+        borderTop: '1px solid rgba(232,161,32,0.1)',
       }}
     >
       {/* Gold radar rings */}
       <motion.div
         className="absolute top-1/2 left-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 border rounded-full"
-        style={{ width: '50vw', height: '50vw', scale: radarScale, opacity: radarOpacity, borderColor: 'rgba(201,150,58,0.2)' }}
+        style={{ width: '50vw', height: '50vw', scale: radarScale, opacity: radarOpacity, borderColor: 'rgba(232,161,32,0.15)' }}
       />
       <motion.div
         className="absolute top-1/2 left-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 border border-dashed rounded-full"
-        style={{ width: '30vw', height: '30vw', scale: radarScale, rotate: radarRotate, opacity: radarOpacity, borderColor: 'rgba(201,150,58,0.15)' }}
+        style={{ width: '30vw', height: '30vw', scale: radarScale, rotate: radarRotate, opacity: radarOpacity, borderColor: 'rgba(232,161,32,0.1)' }}
       />
       {/* Rotating crosshair */}
       <motion.div
         className="absolute top-1/2 left-[30%] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
         style={{ width: '60vw', height: '60vw', rotate: crosshairRotate, opacity: crosshairOpacity }}
       >
-        <div style={{ backgroundColor: 'rgba(201,150,58,0.25)' }} className="absolute top-0 bottom-0 left-1/2 w-[1px] -translate-x-1/2" />
-        <div style={{ backgroundColor: 'rgba(201,150,58,0.25)' }} className="absolute left-0 right-0 top-1/2 h-[1px] -translate-y-1/2" />
+        <div style={{ backgroundColor: 'rgba(232,161,32,0.2)' }} className="absolute top-0 bottom-0 left-1/2 w-[1px] -translate-x-1/2" />
+        <div style={{ backgroundColor: 'rgba(232,161,32,0.2)' }} className="absolute left-0 right-0 top-1/2 h-[1px] -translate-y-1/2" />
       </motion.div>
 
       {/* Dot grid */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(201,150,58,0.04) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(232,161,32,0.04) 1px, transparent 0)`,
           backgroundSize: '35px 35px',
         }}
       />
 
-      {/* Ambient glows */}
+      {/* Ambient glow */}
       <div className="absolute top-[30%] right-[-10%] w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none"
         style={{ backgroundColor: GOLD, opacity: 0.012 }} />
 
@@ -117,14 +126,11 @@ export function ContactSection() {
             style={{ opacity: leftColumnOpacity, y: leftColumnY, filter: leftColumnFilter, willChange: 'transform, opacity, filter' }}
           >
             <div>
-              <span style={{ color: GOLD, fontFamily: "'Inter', sans-serif" }}
-                className="text-[10px] sm:text-xs font-bold tracking-[0.4em] uppercase block mb-4">
-                GET IN TOUCH
+              <span className="font-mono-code text-[#e8a120] text-[10px] sm:text-xs font-bold tracking-[0.4em] uppercase block mb-4">
+                START A PROJECT
               </span>
 
-              {/* Heading: LET'S BUILD + italic "together." in gold */}
-              <h2 style={{ fontFamily: "'Anton', sans-serif" }}
-                className="text-white text-5xl sm:text-7xl lg:text-8xl leading-none uppercase mb-2">
+              <h2 className="font-bebas text-white text-5xl sm:text-7xl lg:text-8xl leading-none uppercase mb-2">
                 LET'S BUILD
               </h2>
               <p style={{
@@ -138,51 +144,47 @@ export function ContactSection() {
                 together.
               </p>
 
-              <p className="text-sm sm:text-base leading-relaxed mb-10 text-left"
-                style={{ color: 'rgba(156,163,175,0.7)' }}>
+              <p className="font-sans text-sm sm:text-base leading-relaxed mb-10 text-left text-[#9CA3AF]">
                 Ready to start a project, discuss an idea, or just say hello?
                 Fill out the form or reach us directly — our team responds within one business day.
               </p>
             </div>
 
             {/* Contact channels */}
-            <div className="space-y-6 pt-6" style={{ borderTop: '1px solid rgba(201,150,58,0.1)' }}>
+            <div className="space-y-6 pt-6" style={{ borderTop: '1px solid rgba(232,161,32,0.12)' }}>
               <div className="flex gap-4 items-start text-left">
-                <div style={{ borderColor: 'rgba(201,150,58,0.2)', color: GOLD, backgroundColor: 'rgba(201,150,58,0.05)' }}
-                  className="p-3 border rounded-xl">
+                <div style={{ borderColor: 'rgba(232,161,32,0.2)', color: GOLD, backgroundColor: 'rgba(232,161,32,0.06)' }}
+                  className="p-3 border rounded-xl flex-shrink-0">
                   <Mail size={16} />
                 </div>
                 <div>
-                  <span className="block font-mono text-[10px] tracking-wider" style={{ color: 'rgba(107,114,128,0.7)' }}>EMAIL</span>
+                  <span className="block font-mono-code text-[10px] tracking-wider text-[#6B7280] mb-1 uppercase">EMAIL</span>
                   <a href="mailto:contact@frey.io?subject=Inquiry%20to%20FREY"
-                    className="text-sm font-semibold hover:text-white transition-colors"
-                    style={{ color: '#D1D5DB' }}>
+                    className="text-sm font-semibold hover:text-white transition-colors text-[#D1D5DB]">
                     contact@frey.io
                   </a>
                 </div>
               </div>
 
               <div className="flex gap-4 items-start text-left">
-                <div style={{ borderColor: 'rgba(201,150,58,0.2)', color: GOLD, backgroundColor: 'rgba(201,150,58,0.05)' }}
-                  className="p-3 border rounded-xl">
+                <div style={{ borderColor: 'rgba(232,161,32,0.2)', color: GOLD, backgroundColor: 'rgba(232,161,32,0.06)' }}
+                  className="p-3 border rounded-xl flex-shrink-0">
                   <Building2 size={16} />
                 </div>
                 <div>
-                  <span className="block font-mono text-[10px] tracking-wider" style={{ color: 'rgba(107,114,128,0.7)' }}>LOCATION</span>
-                  <span className="text-sm" style={{ color: 'rgba(209,213,219,0.7)' }}>
-                    Cavite, Philippines
-                  </span>
+                  <span className="block font-mono-code text-[10px] tracking-wider text-[#6B7280] mb-1 uppercase">LOCATION</span>
+                  <span className="text-sm text-[#D1D5DB]">Cavite, Philippines</span>
                 </div>
               </div>
             </div>
 
             {/* Brand quote */}
-            <div className="hidden lg:block mt-10 p-5 rounded-2xl text-left"
-              style={{ backgroundColor: 'rgba(201,150,58,0.04)', border: '1px solid rgba(201,150,58,0.1)' }}>
-              <span className="font-mono text-[9px] uppercase tracking-widest block mb-2" style={{ color: GOLD }}>
+            <div className="hidden lg:block mt-10 p-5 rounded-xl text-left"
+              style={{ backgroundColor: 'rgba(232,161,32,0.03)', border: '1px solid rgba(232,161,32,0.1)' }}>
+              <span className="font-mono-code text-[9px] uppercase tracking-widest block mb-2 text-[#e8a120]">
                 ✦ FREY COLLECTIVE
               </span>
-              <p className="text-[11px] font-mono leading-relaxed" style={{ color: 'rgba(107,114,128,0.7)' }}>
+              <p className="font-mono-code text-[11px] leading-relaxed text-[#6B7280]">
                 We are a close-knit team of computer engineers building software that lasts. Every project is crafted with intention, precision, and pride.
               </p>
             </div>
@@ -193,8 +195,8 @@ export function ContactSection() {
             className="lg:col-span-7"
             style={{ opacity: rightColumnOpacity, y: rightColumnY, scale: rightColumnScale, filter: rightColumnFilter, willChange: 'transform, opacity, filter' }}
           >
-            <div className="w-full rounded-[32px] p-6 sm:p-10 relative overflow-hidden shadow-2xl"
-              style={{ backgroundColor: '#0C0C10', border: '1px solid rgba(201,150,58,0.1)' }}>
+            <div className="w-full rounded-2xl p-6 sm:p-10 relative overflow-hidden shadow-2xl"
+              style={{ backgroundColor: '#111111', border: '1px solid rgba(232,161,32,0.1)' }}>
 
               {/* Gold shine backplate */}
               <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full blur-3xl pointer-events-none"
@@ -207,8 +209,7 @@ export function ContactSection() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="flex flex-col text-left">
                       <label htmlFor="client-name-input"
-                        className="font-mono text-[10px] uppercase tracking-widest mb-2 block"
-                        style={{ color: 'rgba(107,114,128,0.7)' }}>
+                        className="font-mono-code text-[10px] uppercase tracking-widest mb-2 block text-[#6B7280]">
                         Your Name*
                       </label>
                       <input
@@ -218,20 +219,14 @@ export function ContactSection() {
                         value={name}
                         onChange={e => setName(e.target.value)}
                         placeholder="e.g. John Santos"
-                        className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none transition-all"
-                        style={{
-                          backgroundColor: 'rgba(255,255,255,0.02)',
-                          border: '1px solid rgba(201,150,58,0.15)',
-                          placeholder: 'rgba(107,114,128,0.4)',
-                        }}
-                        onFocus={e => e.target.style.borderColor = 'rgba(201,150,58,0.5)'}
-                        onBlur={e => e.target.style.borderColor = 'rgba(201,150,58,0.15)'}
+                        style={inputStyle}
+                        onFocus={e => e.target.style.borderColor = 'rgba(232,161,32,0.5)'}
+                        onBlur={e => e.target.style.borderColor = 'rgba(232,161,32,0.15)'}
                       />
                     </div>
                     <div className="flex flex-col text-left">
                       <label htmlFor="client-email-input"
-                        className="font-mono text-[10px] uppercase tracking-widest mb-2 block"
-                        style={{ color: 'rgba(107,114,128,0.7)' }}>
+                        className="font-mono-code text-[10px] uppercase tracking-widest mb-2 block text-[#6B7280]">
                         Email Address*
                       </label>
                       <input
@@ -241,21 +236,16 @@ export function ContactSection() {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         placeholder="e.g. hello@yourco.com"
-                        className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none transition-all"
-                        style={{
-                          backgroundColor: 'rgba(255,255,255,0.02)',
-                          border: '1px solid rgba(201,150,58,0.15)',
-                        }}
-                        onFocus={e => e.target.style.borderColor = 'rgba(201,150,58,0.5)'}
-                        onBlur={e => e.target.style.borderColor = 'rgba(201,150,58,0.15)'}
+                        style={inputStyle}
+                        onFocus={e => e.target.style.borderColor = 'rgba(232,161,32,0.5)'}
+                        onBlur={e => e.target.style.borderColor = 'rgba(232,161,32,0.15)'}
                       />
                     </div>
                   </div>
 
                   {/* Project Type */}
                   <div className="flex flex-col text-left">
-                    <span className="font-mono text-[10px] uppercase tracking-widest mb-3 block"
-                      style={{ color: 'rgba(107,114,128,0.7)' }}>
+                    <span className="font-mono-code text-[10px] uppercase tracking-widest mb-3 block text-[#6B7280]">
                       Project Type
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -269,15 +259,17 @@ export function ContactSection() {
                           type="button"
                           onClick={() => setProjectType(type.id)}
                           style={{
-                            backgroundColor: projectType === type.id ? 'rgba(201,150,58,0.12)' : 'rgba(255,255,255,0.01)',
-                            borderColor:     projectType === type.id ? GOLD : 'rgba(201,150,58,0.1)',
+                            backgroundColor: projectType === type.id ? 'rgba(232,161,32,0.12)' : 'rgba(255,255,255,0.01)',
+                            borderColor:     projectType === type.id ? GOLD : 'rgba(232,161,32,0.1)',
                             color:           projectType === type.id ? '#F8F8F6' : 'rgba(255,255,255,0.45)',
                             transition: 'all 300ms ease',
+                            borderRadius: '8px',
+                            border: '1px solid',
                           }}
-                          className="p-4 rounded-xl border text-left outline-none cursor-pointer flex flex-col justify-between"
+                          className="p-4 text-left outline-none cursor-pointer flex flex-col justify-between"
                         >
-                          <span className="text-[11px] font-bold tracking-wider block mb-1 uppercase font-mono">{type.label}</span>
-                          <span className="text-[9px]" style={{ color: 'rgba(107,114,128,0.6)' }}>{type.sub}</span>
+                          <span className="font-mono-code text-[11px] font-bold tracking-wider block mb-1 uppercase">{type.label}</span>
+                          <span className="font-mono-code text-[9px] text-[#6B7280]">{type.sub}</span>
                         </button>
                       ))}
                     </div>
@@ -285,12 +277,11 @@ export function ContactSection() {
 
                   {/* Budget */}
                   <div className="flex flex-col text-left">
-                    <span className="font-mono text-[10px] uppercase tracking-widest mb-3 block"
-                      style={{ color: 'rgba(107,114,128,0.7)' }}>
+                    <span className="font-mono-code text-[10px] uppercase tracking-widest mb-3 block text-[#6B7280]">
                       Budget Range
                     </span>
                     <div className="grid grid-cols-3 rounded-xl p-1 items-center"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(201,150,58,0.1)' }}>
+                      style={{ backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(232,161,32,0.1)' }}>
                       {[
                         { id: 'low',  range: '< ₱25K',     label: 'STARTER' },
                         { id: 'mid',  range: '₱25K–₱100K', label: 'GROWTH' },
@@ -302,14 +293,15 @@ export function ContactSection() {
                           onClick={() => setBudget(bTier.id)}
                           style={{
                             backgroundColor: budget === bTier.id ? GOLD : 'transparent',
-                            color: budget === bTier.id ? '#09090B' : 'rgba(255,255,255,0.45)',
+                            color: budget === bTier.id ? '#0a0a0a' : 'rgba(255,255,255,0.45)',
                             transition: 'all 250ms ease',
+                            borderRadius: '8px',
                           }}
-                          className="text-center py-2.5 rounded-lg outline-none cursor-pointer flex flex-col items-center"
+                          className="text-center py-2.5 outline-none cursor-pointer flex flex-col items-center"
                         >
-                          <span className="font-mono text-[10px] tracking-wider uppercase font-bold">{bTier.range}</span>
-                          <span style={{ color: budget === bTier.id ? 'rgba(9,9,11,0.55)' : 'rgba(107,114,128,0.5)', transition: 'color 250ms' }}
-                            className="text-[8px] tracking-tight">{bTier.label}</span>
+                          <span className="font-mono-code text-[10px] tracking-wider uppercase font-bold">{bTier.range}</span>
+                          <span style={{ color: budget === bTier.id ? 'rgba(10,10,10,0.55)' : 'rgba(107,114,128,0.5)', transition: 'color 250ms' }}
+                            className="font-mono-code text-[8px] tracking-tight">{bTier.label}</span>
                         </button>
                       ))}
                     </div>
@@ -318,8 +310,7 @@ export function ContactSection() {
                   {/* Message */}
                   <div className="flex flex-col text-left">
                     <label htmlFor="client-statement-input"
-                      className="font-mono text-[10px] uppercase tracking-widest mb-2 block"
-                      style={{ color: 'rgba(107,114,128,0.7)' }}>
+                      className="font-mono-code text-[10px] uppercase tracking-widest mb-2 block text-[#6B7280]">
                       Tell us about your project*
                     </label>
                     <textarea
@@ -329,33 +320,40 @@ export function ContactSection() {
                       value={message}
                       onChange={e => setMessage(e.target.value)}
                       placeholder="Describe what you need, your goals, timeline, or anything useful..."
-                      className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none transition-all resize-none"
-                      style={{
-                        backgroundColor: 'rgba(255,255,255,0.02)',
-                        border: '1px solid rgba(201,150,58,0.15)',
-                      }}
-                      onFocus={e => e.target.style.borderColor = 'rgba(201,150,58,0.5)'}
-                      onBlur={e => e.target.style.borderColor = 'rgba(201,150,58,0.15)'}
+                      style={{...inputStyle, resize: 'none'}}
+                      onFocus={e => e.target.style.borderColor = 'rgba(232,161,32,0.5)'}
+                      onBlur={e => e.target.style.borderColor = 'rgba(232,161,32,0.15)'}
                     />
                   </div>
 
                   {/* Submit */}
-                  <div className="pt-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(201,150,58,0.08)' }}>
+                  <div className="pt-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(232,161,32,0.08)' }}>
                     <div className="flex items-center gap-2">
                       <HelpCircle size={14} style={{ color: 'rgba(107,114,128,0.5)' }} />
-                      <span className="text-[10px] font-mono" style={{ color: 'rgba(107,114,128,0.5)' }}>* Required fields</span>
+                      <span className="font-mono-code text-[10px] text-[#6B7280]">* Required fields</span>
                     </div>
                     <button
                       type="submit"
                       disabled={isSubmitting || !name || !email || !message}
                       style={{
                         background: (isSubmitting || !name || !email || !message)
-                          ? 'rgba(255,255,255,0.08)'
+                          ? 'rgba(255,255,255,0.06)'
                           : `linear-gradient(135deg, ${GOLD}, ${GOLD_BRIGHT})`,
-                        color: (isSubmitting || !name || !email || !message) ? 'rgba(255,255,255,0.3)' : '#09090B',
+                        color: (isSubmitting || !name || !email || !message) ? 'rgba(255,255,255,0.3)' : '#0a0a0a',
                         transition: 'all 300ms ease',
+                        borderRadius: '100px',
+                        padding: '12px 24px',
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        letterSpacing: '0.15em',
+                        textTransform: 'uppercase',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: (isSubmitting || !name || !email || !message) ? 'not-allowed' : 'pointer',
                       }}
-                      className="px-6 py-3 text-xs font-mono tracking-widest uppercase font-bold rounded-full flex items-center gap-2 hover:scale-[1.03] active:scale-97 cursor-pointer disabled:hover:scale-100 disabled:cursor-not-allowed"
+                      className="hover:scale-[1.03] active:scale-95 disabled:hover:scale-100"
                     >
                       {isSubmitting ? (
                         <>
@@ -368,7 +366,7 @@ export function ContactSection() {
                       ) : (
                         <>
                           <span>Build with Frey</span>
-                          <Send size={12} />
+                          <Send size={13} />
                         </>
                       )}
                     </button>
@@ -379,48 +377,46 @@ export function ContactSection() {
                 <div className="relative z-10 flex flex-col justify-between min-h-[380px]">
                   <div className="text-left mb-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div style={{ backgroundColor: 'rgba(201,150,58,0.12)', border: `1px solid rgba(201,150,58,0.3)`, color: GOLD_BRIGHT }}
-                        className="w-10 h-10 rounded-full flex items-center justify-center">
+                      <div style={{ backgroundColor: 'rgba(232,161,32,0.12)', border: `1px solid rgba(232,161,32,0.3)`, color: GOLD_BRIGHT }}
+                        className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
                         <CheckCircle size={20} />
                       </div>
                       <div>
                         <h4 className="text-white text-lg font-bold tracking-tight">Message received!</h4>
-                        <span className="text-[10px] font-mono uppercase tracking-wider block"
-                          style={{ color: 'rgba(107,114,128,0.6)' }}>We'll be in touch soon</span>
+                        <span className="font-mono-code text-[10px] uppercase tracking-wider block text-[#6B7280]">We'll be in touch soon</span>
                       </div>
                     </div>
-                    <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'rgba(156,163,175,0.7)' }}>
+                    <p className="font-sans text-xs sm:text-sm leading-relaxed text-[#9CA3AF]">
                       Thank you for reaching out. We've received your message and our team will respond within one business day.
                     </p>
                   </div>
 
                   {/* Receipt terminal */}
-                  <div className="rounded-2xl p-5 font-mono text-xs text-left mb-6"
-                    style={{ backgroundColor: '#08080a', border: '1px solid rgba(201,150,58,0.08)' }}>
-                    <div className="flex items-center justify-between pb-3 mb-3" style={{ borderBottom: '1px solid rgba(201,150,58,0.08)' }}>
+                  <div className="rounded-xl p-5 font-mono-code text-xs text-left mb-6"
+                    style={{ backgroundColor: '#0a0a0a', border: '1px solid rgba(232,161,32,0.08)' }}>
+                    <div className="flex items-center justify-between pb-3 mb-3" style={{ borderBottom: '1px solid rgba(232,161,32,0.08)' }}>
                       <div className="flex items-center gap-2">
                         <Terminal size={14} style={{ color: 'rgba(107,114,128,0.5)' }} />
-                        <span className="font-bold font-mono" style={{ color: 'rgba(156,163,175,0.7)', fontSize: '11px' }}>inquiry-receipt</span>
+                        <span className="font-bold font-mono-code" style={{ color: 'rgba(156,163,175,0.7)', fontSize: '11px' }}>inquiry-receipt</span>
                       </div>
-                      <span className="font-mono text-[10px] tracking-wide" style={{ color: GOLD }}>
+                      <span className="font-mono-code text-[10px] tracking-wide text-[#e8a120]">
                         [RECEIVED]
                       </span>
                     </div>
-                    <pre className="text-[11px] leading-tight overflow-x-auto max-h-[140px] font-mono select-text whitespace-pre-wrap"
-                      style={{ color: 'rgba(107,114,128,0.7)' }}>
+                    <pre className="text-[11px] leading-tight overflow-x-auto max-h-[140px] font-mono-code select-text whitespace-pre-wrap text-[#6B7280]">
                       {JSON.stringify(terminalPayload, null, 2)}
                     </pre>
                   </div>
 
-                  <div className="pt-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(201,150,58,0.08)' }}>
-                    <span className="text-[9px] font-mono tracking-widest uppercase" style={{ color: 'rgba(107,114,128,0.4)' }}>
+                  <div className="pt-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(232,161,32,0.08)' }}>
+                    <span className="font-mono-code text-[9px] tracking-widest uppercase text-[#6B7280]">
                       REF: {terminalPayload?.ref || 'N/A'}
                     </span>
                     <button
                       type="button"
                       onClick={resetForm}
-                      style={{ borderColor: 'rgba(201,150,58,0.25)', backgroundColor: 'rgba(201,150,58,0.06)', color: GOLD }}
-                      className="px-5 py-2.5 rounded-full font-mono text-[10px] tracking-widest uppercase font-bold cursor-pointer hover:bg-[rgba(201,150,58,0.12)] transition-all"
+                      style={{ borderColor: 'rgba(232,161,32,0.25)', backgroundColor: 'rgba(232,161,32,0.06)', color: GOLD }}
+                      className="px-5 py-2.5 rounded-full font-mono-code text-[10px] tracking-widest uppercase font-bold cursor-pointer hover:bg-[rgba(232,161,32,0.12)] transition-all border"
                     >
                       [ NEW MESSAGE ]
                     </button>
@@ -436,8 +432,8 @@ export function ContactSection() {
       <div
         className="absolute bottom-0 left-0 w-full h-[1px]"
         style={{
-          background: `linear-gradient(90deg, transparent, rgba(201,150,58,0.3), transparent)`,
-          boxShadow: `0 -8px 16px rgba(201,150,58,0.08)`,
+          background: `linear-gradient(90deg, transparent, rgba(232,161,32,0.3), transparent)`,
+          boxShadow: `0 -8px 16px rgba(232,161,32,0.08)`,
         }}
       />
     </section>

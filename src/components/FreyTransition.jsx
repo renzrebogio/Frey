@@ -1,34 +1,33 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
-
-const GOLD       = '#C9963A';
-const GOLD_BRIGHT = '#E8B84B';
-const GOLD_GLOW  = '#F5D27A';
+import { GOLD, GOLD_BRIGHT, GOLD_GLOW } from '../data';
+import { BinaryRain } from './BinaryRain';
 
 /* ── Gold spark particles that fire during power-up ── */
 function Spark({ delay, x, y }) {
   return (
     <motion.div
-      className="absolute rounded-full pointer-events-none"
+      className="absolute rounded-full pointer-events-none z-10"
       style={{
-        width: 2,
-        height: 2,
+        width: 3,
+        height: 3,
         left: `${50 + x}%`,
         top: `${50 + y}%`,
         backgroundColor: GOLD_BRIGHT,
+        boxShadow: `0 0 8px ${GOLD_BRIGHT}`
       }}
       initial={{ opacity: 0, scale: 0 }}
       animate={{
         opacity: [0, 1, 1, 0],
-        scale:   [0, 1.5, 1, 0],
-        x: [0, x * 4, x * 8],
-        y: [0, y * 4, y * 8],
+        scale:   [0, 2, 1, 0],
+        x: [0, x * 6, x * 10],
+        y: [0, y * 6, y * 10],
       }}
       transition={{
-        duration: 1.2,
+        duration: 1.5,
         delay,
         repeat: Infinity,
-        repeatDelay: 2 + Math.random() * 2,
+        repeatDelay: 1 + Math.random() * 2,
       }}
     />
   );
@@ -45,7 +44,7 @@ export function FreyTransition() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
+    stiffness: 80,
     damping: 30,
     restDelta: 0.001,
   });
@@ -64,13 +63,13 @@ export function FreyTransition() {
 
   // FREY text colour: stone dim → gold bright
   const textColor = useTransform(glowIntensity, (g) =>
-    g > 0.5 ? GOLD_BRIGHT : 'rgba(201,150,58,0.08)'
+    g > 0.5 ? '#ffffff' : 'rgba(232,161,32,0.05)'
   );
 
-  // Gold text glow
+  // Gold text glow pulse
   const textShadow = useTransform(glowIntensity, (g) =>
     g > 0
-      ? `0 0 ${g * 40}px ${GOLD}, 0 0 ${g * 90}px ${GOLD}60, 0 0 ${g * 160}px ${GOLD}30`
+      ? `0 0 ${g * 50}px ${GOLD}, 0 0 ${g * 100}px ${GOLD}80, 0 0 ${g * 180}px ${GOLD}40`
       : 'none'
   );
 
@@ -81,13 +80,16 @@ export function FreyTransition() {
   );
 
   // Gold horizontal power line
-  const powerLineWidth = useTransform(glowIntensity, [0, 0.5, 1], ['0%', '25%', '55%']);
+  const powerLineWidth = useTransform(glowIntensity, [0, 0.5, 1], ['0%', '25%', '65%']);
 
   // Overall section fade
   const sectionOpacity = useTransform(smoothProgress,
     [0, 0.05, 0.85, 1],
     [0, 1,    1,    0]
   );
+
+  // Binary Rain Opacity
+  const binaryRainOpacity = useTransform(glowIntensity, [0, 1], [0.01, 0.15]);
 
   // Track powered state for sparks
   useEffect(() => {
@@ -121,7 +123,7 @@ export function FreyTransition() {
       const traces = [];
       const vias   = [];
       const grid   = 20;
-      const numBuses = 16;
+      const numBuses = 18;
 
       for (let b = 0; b < numBuses; b++) {
         const angle  = (b / numBuses) * Math.PI * 2 + Math.random() * 0.2;
@@ -195,15 +197,16 @@ export function FreyTransition() {
         if (powered) {
           // Gold outer glow
           ctx.strokeStyle  = GOLD;
-          ctx.lineWidth    = 4;
-          ctx.globalAlpha  = 0.2;
+          ctx.lineWidth    = 5;
+          ctx.globalAlpha  = 0.25;
           ctx.stroke();
           // Gold core
-          ctx.lineWidth    = 1.5;
-          ctx.globalAlpha  = 0.65;
+          ctx.strokeStyle  = GOLD_BRIGHT;
+          ctx.lineWidth    = 2;
+          ctx.globalAlpha  = 0.8;
           ctx.stroke();
         } else {
-          ctx.strokeStyle  = `rgba(146,113,42,${0.08 + traceProgress * 0.15})`;
+          ctx.strokeStyle  = `rgba(232,161,32,${0.05 + traceProgress * 0.15})`;
           ctx.lineWidth    = 1.5;
           ctx.globalAlpha  = 1.0;
           ctx.stroke();
@@ -212,12 +215,12 @@ export function FreyTransition() {
 
       if (traceProgress > 0.1) {
         pcbData.vias.forEach(v => {
-          ctx.globalAlpha = powered ? 0.7 : (0.1 + traceProgress * 0.15);
-          ctx.fillStyle   = powered ? GOLD_BRIGHT : 'rgba(146,113,42,0.5)';
+          ctx.globalAlpha = powered ? 0.9 : (0.1 + traceProgress * 0.15);
+          ctx.fillStyle   = powered ? GOLD_BRIGHT : 'rgba(232,161,32,0.4)';
           ctx.beginPath();
           ctx.arc(v.x, v.y, 3.5, 0, Math.PI * 2);
           ctx.fill();
-          ctx.fillStyle = '#020203';
+          ctx.fillStyle = '#0a0a0a';
           ctx.beginPath();
           ctx.arc(v.x, v.y, 1.5, 0, Math.PI * 2);
           ctx.fill();
@@ -227,10 +230,10 @@ export function FreyTransition() {
       ctx.globalAlpha = 1.0;
 
       if (powered) {
-        const gSize = 130;
+        const gSize = 150;
         const grd   = ctx.createRadialGradient(cx, cy, 0, cx, cy, gSize);
-        grd.addColorStop(0, `${GOLD}25`);
-        grd.addColorStop(0.5, `${GOLD}0D`);
+        grd.addColorStop(0, `${GOLD}30`);
+        grd.addColorStop(0.5, `${GOLD}10`);
         grd.addColorStop(1, 'transparent');
         ctx.fillStyle = grd;
         ctx.fillRect(cx - gSize, cy - gSize, gSize * 2, gSize * 2);
@@ -258,25 +261,44 @@ export function FreyTransition() {
   }, [smoothProgress]);
 
   // Pre-generate spark positions
-  const sparks = Array.from({ length: 10 }, () => ({
-    x: (Math.random() - 0.5) * 30,
-    y: (Math.random() - 0.5) * 20,
+  const sparks = Array.from({ length: 15 }, () => ({
+    x: (Math.random() - 0.5) * 40,
+    y: (Math.random() - 0.5) * 25,
     delay: Math.random() * 1.5,
   }));
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-transparent"
+      className="relative w-full bg-[#0a0a0a]"
       style={{ height: '300vh' }}
     >
       <motion.div
         className="sticky top-0 w-full h-screen overflow-hidden"
         style={{ opacity: sectionOpacity }}
       >
+        {/* Background Grain */}
+        <div
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            opacity: 0.05,
+            backgroundSize: '200px 200px',
+            backgroundRepeat: 'repeat',
+          }}
+        />
+
+        {/* Dynamic Binary Rain Background */}
+        <motion.div
+          className="absolute inset-0 z-0 pointer-events-none mix-blend-screen"
+          style={{ opacity: binaryRainOpacity }}
+        >
+          <BinaryRain opacity={1} speed={1.2} density={1.5} color={GOLD} active={true} />
+        </motion.div>
+
         {/* Camera rig */}
         <motion.div
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0 flex items-center justify-center z-10"
           style={{ scale: cameraScale }}
         >
           {/* Gold trace canvas */}
@@ -291,9 +313,9 @@ export function FreyTransition() {
             <div
               className="absolute inset-0 pointer-events-none -z-10"
               style={{
-                background: 'radial-gradient(circle, rgba(9,9,11,0.96) 0%, rgba(9,9,11,0.85) 50%, rgba(9,9,11,0) 75%)',
-                transform: 'scale(1.3)',
-                filter: 'blur(10px)',
+                background: 'radial-gradient(circle, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.85) 50%, rgba(10,10,10,0) 75%)',
+                transform: 'scale(1.4)',
+                filter: 'blur(12px)',
               }}
             />
 
@@ -305,7 +327,7 @@ export function FreyTransition() {
                 textShadow: textShadow,
                 letterSpacing: '0.18em',
               }}
-              className="text-7xl sm:text-8xl md:text-[10rem] lg:text-[13rem] uppercase select-none pointer-events-none leading-none"
+              className="text-7xl sm:text-8xl md:text-[10rem] lg:text-[13rem] uppercase select-none pointer-events-none leading-none z-20 relative"
             >
               FREY
             </motion.h2>
@@ -315,40 +337,28 @@ export function FreyTransition() {
               style={{
                 opacity: subtitleOpacity,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                color: GOLD_GLOW,
+                color: '#ffffff',
+                textShadow: `0 0 10px ${GOLD}`,
                 letterSpacing: '0.2em',
                 fontStyle: 'italic',
               }}
-              className="text-sm sm:text-base md:text-lg mt-3 sm:mt-5 font-light"
+              className="text-sm sm:text-base md:text-xl mt-3 sm:mt-5 font-light z-20 relative"
             >
-              Build with Frey
+              Build with Frey.
             </motion.p>
 
             {/* Gold power line */}
             <motion.div
-              className="mt-6 h-[1px] rounded-full"
+              className="mt-6 h-[2px] rounded-full z-20 relative"
               style={{
                 background: `linear-gradient(90deg, transparent, ${GOLD_BRIGHT}, transparent)`,
                 width: powerLineWidth,
                 opacity: glowIntensity,
                 boxShadow: useTransform(glowIntensity, (g) =>
-                  `0 0 ${g * 20}px ${GOLD}`
+                  `0 0 ${g * 30}px ${GOLD}`
                 ),
               }}
             />
-
-            {/* ✦ sigil beneath power line */}
-            <motion.span
-              style={{
-                opacity: glowIntensity,
-                color: GOLD,
-                fontSize: '14px',
-                letterSpacing: '0.3em',
-              }}
-              className="mt-4 font-mono select-none pointer-events-none"
-            >
-              ✦ ✦ ✦
-            </motion.span>
 
             {/* Sparks */}
             {isPowered &&
@@ -356,36 +366,16 @@ export function FreyTransition() {
                 <Spark key={i} delay={s.delay} x={s.x} y={s.y} />
               ))}
           </div>
-
-          {/* Corner decorations — gold */}
-          <motion.div
-            className="absolute top-12 left-12 pointer-events-none z-0"
-            style={{ opacity: useTransform(smoothProgress, [0, 0.15], [0, 0.35]) }}
-          >
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-              <path d="M0 40 L40 40 L40 0" stroke={GOLD} strokeWidth="1" opacity="0.35" />
-              <circle cx="40" cy="40" r="3" fill={GOLD} opacity="0.5" />
-            </svg>
-          </motion.div>
-          <motion.div
-            className="absolute bottom-12 right-12 pointer-events-none z-0"
-            style={{ opacity: useTransform(smoothProgress, [0, 0.15], [0, 0.35]) }}
-          >
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-              <path d="M80 40 L40 40 L40 80" stroke={GOLD} strokeWidth="1" opacity="0.35" />
-              <circle cx="40" cy="40" r="3" fill={GOLD} opacity="0.5" />
-            </svg>
-          </motion.div>
         </motion.div>
 
         {/* Gold scan line — stays in screen-space */}
         <motion.div
-          className="absolute left-0 w-full h-[1px] pointer-events-none z-20"
+          className="absolute left-0 w-full h-[2px] pointer-events-none z-30 mix-blend-screen"
           style={{
             top: useTransform(smoothProgress, [0.38, 0.55], ['30%', '70%']),
-            opacity: useTransform(glowIntensity, [0, 0.5, 1], [0, 0.5, 0]),
-            background: `linear-gradient(90deg, transparent, ${GOLD}80, transparent)`,
-            boxShadow: `0 0 12px ${GOLD}`,
+            opacity: useTransform(glowIntensity, [0, 0.5, 1], [0, 0.8, 0]),
+            background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)`,
+            boxShadow: `0 0 20px ${GOLD_BRIGHT}`,
           }}
         />
       </motion.div>

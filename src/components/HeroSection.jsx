@@ -1,288 +1,109 @@
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { IMAGES } from '../data';
+import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { BinaryRain } from './BinaryRain';
+import { useTextScramble } from '../hooks/useTextScramble';
+import freyLogo from '../uploads/freylogo.png';
 
-export function HeroSection({
-  activeIndex,
-  isAnimating,
-  isMobile,
-  navigate,
-  getRole,
-  getRoleStyles,
-}) {
-  const GOLD        = '#C9963A';
-  const GOLD_BRIGHT = '#E8B84B';
+export function HeroSection() {
+  const [triggerScramble, setTriggerScramble] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTriggerScramble(true);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const { displayText: headlineText } = useTextScramble('BUILT BY FREY.', 700, triggerScramble);
 
   return (
-    <div
-      id="frey-hero-section"
-      style={{
-        position: 'relative',
-        zIndex: 10,
-        backgroundColor: '#09090B',
-        fontFamily: "'Inter', sans-serif",
-        marginTop: 0,
-        paddingTop: 0,
-      }}
-      className="relative w-full [overflow-x:clip] select-none"
+    <section
+      id="hero"
+      className="relative w-full h-[100svh] min-h-[600px] flex items-center justify-center overflow-hidden bg-[#0a0a0a]"
+      style={{ zIndex: 10 }}
     >
+      {/* Background grain */}
       <div
-        className="relative w-full [overflow:clip]"
         style={{
-          height: isMobile ? 'calc(var(--hero-vh, 1svh) * 72)' : '100vh',
-          minHeight: isMobile ? '480px' : '600px',
-          maxHeight: isMobile ? '680px' : 'none',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          opacity: 0.06,
+          backgroundSize: '200px 200px',
+          backgroundRepeat: 'repeat',
+          zIndex: 0,
         }}
-      >
-        {/* Grain overlay */}
-        <div
-          id="grain-layer"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            opacity: 0.07,
-            backgroundSize: '200px 200px',
-            backgroundRepeat: 'repeat',
-            zIndex: 50,
-          }}
-          className="absolute inset-0 pointer-events-none"
-        />
+        className="absolute inset-0 pointer-events-none"
+      />
 
-        {/* Radial gold glow — shifts subtly based on active card */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 1,
-            background: `radial-gradient(ellipse 60% 50% at ${
-              activeIndex === 0 ? '35%' :
-              activeIndex === 1 ? '45%' :
-              activeIndex === 2 ? '55%' : '65%'
-            } 70%, rgba(201,150,58,0.07) 0%, transparent 70%)`,
-            transition: 'background 650ms cubic-bezier(0.4, 0, 0.2, 1)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        {/* Giant ghost name text */}
-        <div
-          id="giant-background-text"
-          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-          style={{ zIndex: 2 }}
-        >
-          {IMAGES.map((item, idx) => {
-            const isActive = idx === activeIndex;
-            return (
-              <h1
-                key={idx}
-                style={{
-                  fontFamily: "'Anton', sans-serif",
-                  transform: isMobile ? 'translateY(-15px)' : 'translateY(-80px)',
-                  opacity: isActive ? 0.07 : 0,
-                  transition: 'opacity 650ms cubic-bezier(0.4, 0, 0.2, 1)',
-                  position: 'absolute',
-                  fontSize: '24vw',
-                  lineHeight: 1,
-                  textTransform: 'uppercase',
-                  letterSpacing: '-0.04em',
-                  whiteSpace: 'nowrap',
-                  color: '#D1D5DB',
-                }}
-              >
-                {item.name}
-              </h1>
-            );
-          })}
-        </div>
-
-        {/* Carousel cards */}
-        <div id="carousel-viewport" className="absolute inset-0" style={{ zIndex: 3 }}>
-          {IMAGES.map((item, idx) => {
-            const role = getRole(idx);
-            const roleStyles = getRoleStyles(role);
-
-            return (
-              <div
-                key={idx}
-                id={`carousel-item-${idx}`}
-                style={{
-                  position: 'absolute',
-                  aspectRatio: '0.6 / 1',
-                  transition:
-                    'transform 650ms cubic-bezier(0.4, 0, 0.2, 1), filter 650ms cubic-bezier(0.4, 0, 0.2, 1), opacity 650ms cubic-bezier(0.4, 0, 0.2, 1), left 650ms cubic-bezier(0.4, 0, 0.2, 1), bottom 650ms cubic-bezier(0.4, 0, 0.2, 1), height 650ms cubic-bezier(0.4, 0, 0.2, 1)',
-                  willChange: 'transform, filter, opacity',
-                  ...roleStyles,
-                }}
-              >
-                {/* Gold metallic pedestal */}
-                <div
-                  style={{
-                    background: 'linear-gradient(to bottom, rgba(201,150,58,0.18), rgba(146,113,42,0.25))',
-                    transform: 'translate(-50%, 50%) rotateX(65deg)',
-                    boxShadow: '0 20px 40px -8px rgba(201,150,58,0.15)',
-                    border: '1px solid rgba(201,150,58,0.2)',
-                  }}
-                  className="absolute bottom-[-1%] left-1/2 w-[100%] h-[18%] rounded-full -z-10 opacity-90 overflow-hidden"
-                >
-                  <div className="absolute inset-[10%] rounded-full bg-white/10 blur-[1px]" />
-                </div>
-
-                <img
-                  src={item.src}
-                  alt={`Frey team member ${item.name}`}
-                  referrerPolicy="no-referrer"
-                  draggable={false}
-                  className="w-full h-full object-contain object-bottom select-none pointer-events-none"
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Controls panel — bottom left */}
-        <div
-          id="controls-panel"
-          style={{ zIndex: 50 }}
-          className="absolute left-4 right-4 sm:left-16 sm:right-auto sm:max-w-[360px]"
-        >
-          <style>{`
-            #controls-panel {
-              bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(16px, 3.5vh, 36px));
-            }
-            @media (min-width: 640px) {
-              #controls-panel { bottom: 64px; }
-            }
-          `}</style>
-
-          {/* Cormorant serif accent above name */}
-          <p
-            style={{
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              color: 'rgba(201,150,58,0.55)',
-              fontSize: isMobile ? '10px' : '13px',
-              letterSpacing: '0.25em',
-              fontStyle: 'italic',
-              marginBottom: '2px',
-            }}
-          >
-            exalted one
-          </p>
-
-          <h2
-            className="text-white font-bold tracking-wider uppercase mb-0.5"
-            style={{
-              fontSize: isMobile ? '13px' : '24px',
-              color: '#F8F8F6',
-              letterSpacing: '0.15em',
-            }}
-          >
-            {IMAGES[activeIndex].name}
-          </h2>
-          <span
-            style={{
-              color: 'rgba(201,150,58,0.7)',
-              fontSize: '10px',
-              marginBottom: isMobile ? '8px' : '16px',
-              fontFamily: "'Inter', sans-serif",
-              letterSpacing: '0.3em',
-            }}
-            className="tracking-widest uppercase font-semibold block font-mono"
-          >
-            {IMAGES[activeIndex].role}
-          </span>
-
-          {/* Statement — desktop only */}
-          <p
-            className="hidden sm:block text-sm leading-relaxed mb-8 text-left"
-            style={{ color: 'rgba(209,213,219,0.7)' }}
-          >
-            "{IMAGES[activeIndex].statement}"
-          </p>
-
-          {/* Nav buttons row */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            <button
-              type="button"
-              onClick={() => navigate('prev')}
-              disabled={isAnimating}
-              aria-label="Previous team member"
-              style={{
-                width: isMobile ? '40px' : '52px',
-                height: isMobile ? '40px' : '52px',
-                border: '1px solid rgba(201,150,58,0.5)',
-                color: '#E8B84B',
-                borderRadius: '50%',
-                transition: 'all 150ms ease',
-              }}
-              className="flex items-center justify-center cursor-pointer select-none active:scale-95 hover:bg-[#C9963A] hover:text-black hover:border-[#C9963A] disabled:opacity-40 flex-shrink-0"
-            >
-              <ArrowLeft size={isMobile ? 15 : 20} strokeWidth={2} />
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('next')}
-              disabled={isAnimating}
-              aria-label="Next team member"
-              style={{
-                width: isMobile ? '40px' : '52px',
-                height: isMobile ? '40px' : '52px',
-                border: '1px solid rgba(201,150,58,0.5)',
-                color: '#E8B84B',
-                borderRadius: '50%',
-                transition: 'all 150ms ease',
-              }}
-              className="flex items-center justify-center cursor-pointer select-none active:scale-95 hover:bg-[#C9963A] hover:text-black hover:border-[#C9963A] disabled:opacity-40 flex-shrink-0"
-            >
-              <ArrowRight size={isMobile ? 15 : 20} strokeWidth={2} />
-            </button>
-
-            {/* Mobile discover link */}
-            <a
-              href="#discover"
-              style={{
-                fontFamily: "'Anton', sans-serif",
-                color: '#E8B84B',
-                letterSpacing: '0.08em',
-              }}
-              className="sm:hidden text-lg leading-none uppercase tracking-tighter flex items-center gap-1.5 no-underline group cursor-pointer ml-2"
-            >
-              <span>DISCOVER</span>
-              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-active:translate-x-1" strokeWidth={2.5} />
-            </a>
-          </div>
-        </div>
-
-        {/* DISCOVER IT — desktop bottom right */}
-        <div className="hidden sm:flex absolute bottom-16 right-12 items-center" style={{ zIndex: 50 }}>
-          <a
-            href="#discover"
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              color: '#E8B84B',
-              letterSpacing: '0.08em',
-            }}
-            className="text-6xl leading-none uppercase transition-opacity duration-200 hover:opacity-75 flex items-center gap-4 no-underline group cursor-pointer"
-          >
-            <span>DISCOVER IT</span>
-            <ArrowRight
-              className="w-12 h-12 translate-y-0.5 transition-transform duration-200 group-hover:translate-x-2"
-              strokeWidth={2}
-            />
-          </a>
-        </div>
-
-        {/* Subtle bottom gold gradient edge */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '120px',
-            background: 'linear-gradient(to top, rgba(9,9,11,1) 0%, transparent 100%)',
-            zIndex: 4,
-            pointerEvents: 'none',
-          }}
-        />
+      {/* Binary Rain Layer */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
+        <BinaryRain opacity={0.05} speed={0.5} density={0.8} color="#e8a120" active={true} />
       </div>
-    </div>
+
+      {/* Frey Logo Watermark */}
+      <motion.img
+        initial={{ opacity: 0, scale: 1.05 }}
+        animate={{ opacity: 0.06, scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        src={freyLogo}
+        alt="Frey Logo Mark"
+        className="absolute right-0 sm:right-1/4 top-1/2 -translate-y-1/2 w-full max-w-[800px] object-contain pointer-events-none select-none"
+        style={{ zIndex: 2 }}
+      />
+
+      {/* Content Container */}
+      <div className="relative z-10 w-full max-w-7xl px-6 sm:px-16 flex flex-col items-center sm:items-start text-center sm:text-left mt-16 sm:mt-0">
+        
+        {/* Eyebrow */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+          className="font-mono-code text-[#e8a120] text-[10px] sm:text-xs tracking-widest uppercase mb-4 sm:mb-6"
+        >
+          Est. in pursuit of excellence <span className="mx-2 opacity-50">·</span> Norse for freedom. Built for the future.
+        </motion.p>
+
+        {/* Main Headline */}
+        <h1
+          className="font-bebas text-white uppercase leading-[0.85] tracking-tight mb-6 sm:mb-8 text-center sm:text-left"
+          style={{
+            fontSize: 'clamp(80px, 13vw, 180px)',
+            textShadow: '0 0 60px rgba(232,161,32,0.18)'
+          }}
+        >
+          {headlineText}
+        </h1>
+
+        {/* Sub-copy */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2, ease: "easeOut" }}
+          className="text-[#c0c0c0] font-sans text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed mb-10 sm:mb-12"
+        >
+          Software forged for the exalted. We build digital systems that move, think, and last.
+        </motion.p>
+
+        {/* CTA Button */}
+        <motion.a
+          href="#discover"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 1.5, ease: "easeOut" }}
+          className="inline-flex items-center justify-center border border-[#e8a120] text-[#e8b84b] hover:bg-[#e8a120] hover:text-[#0a0a0a] transition-all duration-300 font-sans font-semibold text-sm sm:text-base tracking-wide px-8 py-3.5 sm:px-10 sm:py-4 rounded-[1px]"
+        >
+          See Our Work &rarr;
+        </motion.a>
+      </div>
+
+      {/* Bottom fade */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+        style={{
+          background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, transparent 100%)',
+          zIndex: 5
+        }}
+      />
+    </section>
   );
 }
