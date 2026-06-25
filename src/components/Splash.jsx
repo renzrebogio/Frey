@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import freyLogo from '../uploads/freylogo.png';
 
 // Phase timeline:
 //  100ms  → phase 1: draw gold SVG lines inward, show dim FREY ghost
@@ -200,6 +201,38 @@ export function Splash() {
 
       {/* Central Brand Block */}
       <div className="relative z-20 flex flex-col items-center text-center px-6">
+        {/* FREY Logo */}
+        <div className="relative flex items-center justify-center">
+          {/* Intense ambient backlight */}
+          <div 
+            className="absolute bg-[#e8a120] rounded-full blur-[60px]" 
+            style={{
+              width: '180px',
+              height: '180px',
+              opacity: phase >= 2 && phase < 4 ? 0.4 : 0,
+              transition: 'opacity 800ms ease',
+            }}
+          />
+          
+          <img
+            src={freyLogo}
+            alt="Frey Logo"
+            style={{
+              width: '120px',
+              height: '120px',
+              objectFit: 'contain',
+              marginBottom: '24px',
+              opacity: phase >= 1 ? 1 : 0,
+              transform: phase >= 3 ? 'scale(1)' : 'scale(1.4)',
+              transition: phase >= 3
+                ? 'transform 1400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease-out'
+                : 'opacity 400ms ease-out',
+              filter: 'drop-shadow(0 0 20px rgba(232,161,32,1)) brightness(1.2) contrast(1.1)'
+            }}
+            className={phase >= 2 && phase < 4 ? 'frey-glow-active relative z-10' : 'relative z-10 drop-shadow-lg'}
+          />
+        </div>
+
         {/* FREY wordmark */}
         <h1
           style={{

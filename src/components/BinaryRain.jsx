@@ -18,7 +18,7 @@ export function BinaryRain({
     
     let animationFrameId;
     let drops = [];
-    const fontSize = 14;
+    const fontSize = 18; // Increased size to make the 1s and 0s clear
     
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -77,7 +77,11 @@ export function BinaryRain({
   return (
     <canvas
       ref={canvasRef}
-      style={{ opacity, pointerEvents: 'none' }}
+      style={{ 
+        opacity, 
+        pointerEvents: 'none',
+        filter: `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 2px ${color})`
+      }}
       className="absolute inset-0 w-full h-full z-0 mix-blend-screen"
     />
   );

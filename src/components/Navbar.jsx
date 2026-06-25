@@ -1,5 +1,6 @@
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import freyLogo from '../uploads/freylogo.png';
 
 export function Navbar({ isScrolled, mobileMenuOpen, setMobileMenuOpen }) {
   const [hoveredLink, setHoveredLink] = useState(null);
@@ -11,9 +12,8 @@ export function Navbar({ isScrolled, mobileMenuOpen, setMobileMenuOpen }) {
   };
 
   const navLinks = [
-    { label: 'About', id: 'discover' },
-    { label: 'Team', id: 'team' },
     { label: 'Services', id: 'discover' },
+    { label: 'About', id: 'team' },
     { label: 'Projects', id: 'projects' },
     { label: 'Contact', id: 'contact' },
   ];
@@ -38,8 +38,14 @@ export function Navbar({ isScrolled, mobileMenuOpen, setMobileMenuOpen }) {
       <div className="flex items-center gap-3 group">
         <div
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-2 cursor-pointer select-none"
+          className="flex items-center gap-2.5 cursor-pointer select-none"
         >
+          <img
+            src={freyLogo}
+            alt="Frey Logo"
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain opacity-100 transition-transform group-hover:scale-105"
+            style={{ filter: 'drop-shadow(0 0 12px rgba(232,161,32,0.8)) brightness(1.2) contrast(1.1)' }}
+          />
           <span
             style={{
               fontFamily: "'Anton', sans-serif",
@@ -113,46 +119,7 @@ export function Navbar({ isScrolled, mobileMenuOpen, setMobileMenuOpen }) {
       </div>
 
       {/* Right actions */}
-      <div className="flex items-center gap-4">
-        {/* ONLINE status pill */}
-        <div
-          style={{
-            border: '1px solid rgba(232,161,32,0.25)',
-            backgroundColor: 'rgba(232,161,32,0.06)',
-          }}
-          className="flex items-center gap-2 px-3 py-1 rounded-full select-none"
-        >
-          <span
-            style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              backgroundColor: '#e8a120',
-              display: 'inline-block',
-              animation: 'gold-pulse 2s ease-in-out infinite',
-            }}
-          />
-          <span
-            style={{ color: 'rgba(232,161,32,0.8)' }}
-            className="text-[9px] font-mono-code tracking-wider"
-          >
-            ONLINE
-          </span>
-        </div>
-
-        {/* Contact CTA — gold border → fill */}
-        <button
-          onClick={() => handleScrollTo('contact')}
-          style={{
-            border: '1px solid rgba(232,161,32,0.5)',
-            color: '#e8b84b',
-            transition: 'all 200ms ease',
-          }}
-          className="hidden md:inline-flex px-5 py-1.5 rounded-full text-[10px] font-mono-code tracking-widest font-bold uppercase cursor-pointer hover:bg-[#e8a120] hover:text-[#0a0a0a] hover:border-[#e8a120] active:scale-95"
-        >
-          CONTACT &rarr;
-        </button>
-
+      <div className="flex items-center">
         {/* Mobile menu toggle */}
         <button
           type="button"

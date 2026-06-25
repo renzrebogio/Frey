@@ -82,7 +82,8 @@ export function Footer() {
               <img
                 src={freyLogo}
                 alt="Frey Logo"
-                className="w-8 h-8 object-contain opacity-80"
+                className="w-10 h-10 object-contain opacity-100"
+                style={{ filter: 'drop-shadow(0 0 12px rgba(232,161,32,0.6)) brightness(1.1)' }}
               />
               <span
                 style={{
@@ -242,7 +243,7 @@ export function Footer() {
               letterSpacing: '0.08em',
             }}
           >
-            Computer Engineering — SSC-R de Cavite
+            Engineered in the Philippines
           </span>
         </div>
       </div>
