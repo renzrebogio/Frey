@@ -15,29 +15,29 @@ export function Footer() {
       name: 'RANDEL',
       role: 'Frontend Developer',
       portfolio: '#',
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      github: 'https://github.com/rapsey8',
+      linkedin: 'https://www.linkedin.com/in/john-randel-sorosoro-1b6245296',
     },
     {
       name: 'GRAZIELLE',
       role: 'Researcher & Operations',
       portfolio: '#',
       github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      linkedin: 'https://www.linkedin.com/in/grazielle-nychole/',
     },
     {
       name: 'RENZ MARTIN',
       role: 'Frontend Developer',
-      portfolio: '#',
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      portfolio: 'https://rebogioportfolio.vercel.app/',
+      github: 'https://github.com/renzrebogio',
+      linkedin: 'https://www.linkedin.com/in/renz-martin-rebogio-3916ab364',
     },
     {
       name: 'ELIJAH BOON',
       role: 'Backend Developer',
-      portfolio: '#',
-      github: 'https://github.com',
-      linkedin: 'https://linkedin.com',
+      portfolio: 'https://elijahboon.netlify.app/',
+      github: 'https://github.com/TechGuru-01',
+      linkedin: 'https://www.linkedin.com/in/elijah-boon-6000383ab/',
     },
   ];
 
@@ -196,6 +196,8 @@ export function Footer() {
                     <div className="flex items-center gap-3">
                       <a
                         href={member.portfolio}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="font-mono-code text-[10px] tracking-widest uppercase font-bold flex items-center gap-1 transition-colors text-[#6B7280] hover:text-[#e8b84b]"
                       >
                         <span>PORTFOLIO</span>

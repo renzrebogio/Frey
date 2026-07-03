@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" style="background:#020203;">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- maximum-scale=1 prevents Android from auto-zooming on input focus -->
+    <!-- viewport-fit=cover enables edge-to-edge on Android + iPhone notch support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <title>FREY - Software Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      html, body, #root {
+        background-color: #020203 !important;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        overscroll-behavior-y: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        /* overflow-x:clip does NOT create a scroll container, so vertical scroll still works.
+           overflow-x:hidden on html/body is a known Android Chrome scroll killer — avoid it. */
+        overflow-x: clip;
+        overscroll-behavior-y: none;
+      }
+      #root {
+        overflow-x: clip;
+        /* svh = small viewport height, excludes browser chrome on Android/iOS */
+        min-height: 100svh;
+        min-height: 100vh; /* fallback */
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-B2pJ_bPn.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C3Bwlrxd.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

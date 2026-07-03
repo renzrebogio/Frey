@@ -43,6 +43,16 @@ export function TeamSection() {
     }, 650);
   };
 
+  // Auto-advance carousel every 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isAnimating) {
+        navigate('next');
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [activeIndex, isAnimating]);
+
   // Derived carousel roles
   const getRole = (index) => {
     if (index === activeIndex) return 'center';
