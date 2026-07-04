@@ -35,7 +35,7 @@ export function Footer() {
     {
       name: 'ELIJAH BOON',
       role: 'Backend Developer',
-      portfolio: 'https://elijahboon.netlify.app/',
+      portfolio: 'https://elijah-boon-portfolio.vercel.app/',
       github: 'https://github.com/TechGuru-01',
       linkedin: 'https://www.linkedin.com/in/elijah-boon-6000383ab/',
     },
