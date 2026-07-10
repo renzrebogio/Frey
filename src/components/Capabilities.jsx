@@ -1,27 +1,92 @@
 import { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'motion/react';
-import { GOLD, GOLD_BRIGHT, GOLD_GLOW } from '../data';
+import { motion, useInView } from 'motion/react';
+import { GOLD, GOLD_BRIGHT } from '../data';
 
-/* ── Animated Counter ── */
-function AnimatedCounter({ value, inView }) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!inView) { setCount(0); return; }
-    const end = parseFloat(value.replace(/[^0-9.]/g, ''));
-    if (isNaN(end)) return;
-    const duration = 2000;
-    const start    = performance.now();
-    const tick = (now) => {
-      const t    = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - t, 4);
-      setCount(end * ease);
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [inView, value]);
-  const suffix  = value.replace(/[0-9.]/g, '');
-  const display = count < 10 && count % 1 !== 0 ? count.toFixed(1) : Math.floor(count);
-  return <>{display}{suffix}</>;
+/* ── Stats Marquee ── */
+const STATS = [
+  { label: 'SYSTEMS DEPLOYED',   val: '240+' },
+  { label: 'DAILY COMPILATIONS', val: '1.2K' },
+  { label: 'LINES OF CODE',      val: '18M+' },
+  { label: 'COMPLEX BUILDS',     val: '40+'  },
+  { label: 'CLIENT UPTIME',      val: '99.9%'},
+  { label: 'PROJECTS SHIPPED',   val: '120+' },
+];
+
+function StatMarquee() {
+  // Triple-duplicate for seamless loop at all screen sizes
+  const items = [...STATS, ...STATS, ...STATS];
+
+  return (
+    <div
+      className="relative w-full overflow-hidden select-none"
+      style={{
+        borderTop:    '1px solid rgba(232,161,32,0.25)',
+        borderBottom: '1px solid rgba(232,161,32,0.25)',
+        background:   'linear-gradient(90deg, rgba(10,10,10,0.95) 0%, rgba(232,161,32,0.04) 50%, rgba(10,10,10,0.95) 100%)',
+      }}
+    >
+      {/* Left & right fade masks */}
+      <div
+        className="absolute inset-y-0 left-0 w-24 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(90deg, #0a0a0a, transparent)' }}
+      />
+      <div
+        className="absolute inset-y-0 right-0 w-24 z-10 pointer-events-none"
+        style={{ background: 'linear-gradient(270deg, #0a0a0a, transparent)' }}
+      />
+
+      {/* Scrolling track */}
+      <div
+        className="flex items-center"
+        style={{
+          animation: 'marquee-scroll 40s linear infinite',
+          width: 'max-content',
+          willChange: 'transform',
+        }}
+      >
+        {items.map((stat, i) => (
+          <div key={i} className="flex items-center shrink-0">
+            {/* Stat item */}
+            <div className="flex items-center gap-4 px-10 py-7">
+              {/* Rotated diamond accent */}
+              <span
+                className="shrink-0 w-1.5 h-1.5 rotate-45 block"
+                style={{ backgroundColor: '#e8a120', opacity: 0.55 }}
+              />
+
+              <div className="flex flex-col items-start">
+                <span
+                  className="font-mono-code uppercase tracking-[0.2em] block"
+                  style={{ color: 'rgba(156,163,175,0.65)', fontSize: '9px', marginBottom: '4px' }}
+                >
+                  {stat.label}
+                </span>
+                <span
+                  className="font-bebas tracking-wider leading-none block"
+                  style={{
+                    fontSize: 'clamp(30px, 3vw, 44px)',
+                    color: '#e8a120',
+                    textShadow: '0 0 24px rgba(232,161,32,0.3)',
+                  }}
+                >
+                  {stat.val}
+                </span>
+              </div>
+            </div>
+
+            {/* Vertical separator */}
+            <div
+              className="h-10 shrink-0"
+              style={{
+                width: '1px',
+                background: 'linear-gradient(180deg, transparent, rgba(232,161,32,0.3), transparent)',
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /* ── Capability Card ── */
@@ -30,16 +95,13 @@ function CapabilityCard({ icon, label, title, desc, index, inView }) {
     <motion.div
       initial={{ opacity: 0, filter: 'blur(4px)' }}
       animate={inView ? { opacity: 1, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 0.6, delay: 0.5 + index * 0.2, ease: "easeOut" }}
+      transition={{ duration: 0.6, delay: 0.5 + index * 0.2, ease: 'easeOut' }}
       className="relative bg-[#111111]/80 backdrop-blur-md rounded-xl p-8 sm:p-10 group text-left overflow-hidden border border-[rgba(232,161,32,0.05)] hover:border-[rgba(232,161,32,0.2)] transition-colors duration-300 shadow-xl"
     >
       {/* Gold top border sweep on hover */}
-      <span
-        className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#e8a120] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      />
+      <span className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#e8a120] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       <div className="flex justify-between items-start mb-10 relative z-10">
-        {/* Gold icon container */}
         <div className="p-3.5 rounded-xl bg-[rgba(232,161,32,0.08)] border border-[rgba(232,161,32,0.15)] text-[#e8b84b] group-hover:bg-[rgba(232,161,32,0.12)] transition-colors duration-300">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
             {icon}
@@ -63,10 +125,7 @@ function CapabilityCard({ icon, label, title, desc, index, inView }) {
 /* ── Main Section ── */
 export function Capabilities() {
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-
-  const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, { once: true, margin: "-50px" });
+  const isInView = useInView(containerRef, { once: true, margin: '-100px' });
 
   const CARDS = [
     {
@@ -99,7 +158,7 @@ export function Capabilities() {
     <section
       id="discover"
       ref={containerRef}
-      className="relative w-full bg-transparent text-white py-24 sm:py-32 select-text overflow-hidden bg-[#0a0a0a]"
+      className="relative w-full text-white select-text overflow-hidden bg-[#0a0a0a]"
       style={{ zIndex: 5 }}
     >
       {/* Radar Sweep Line */}
@@ -107,7 +166,7 @@ export function Capabilities() {
         <motion.div
           initial={{ top: '0%' }}
           animate={{ top: '100%' }}
-          transition={{ duration: 1.5, ease: "linear" }}
+          transition={{ duration: 1.5, ease: 'linear' }}
           className="absolute left-0 right-0 h-[1px] z-0 pointer-events-none"
           style={{
             background: 'linear-gradient(90deg, transparent, #e8a120, transparent)',
@@ -122,13 +181,14 @@ export function Capabilities() {
       <div className="absolute bottom-10 left-10 w-[500px] h-[500px] rounded-full opacity-[0.02] blur-3xl pointer-events-none"
         style={{ backgroundColor: GOLD_BRIGHT }} />
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-20">
+      {/* ── Cards section ── */}
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 relative z-20 py-24 sm:py-32">
 
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
           className="mb-16 sm:mb-24 flex flex-col items-center sm:items-start text-center sm:text-left"
         >
           <span className="font-mono-code text-[#e8a120] text-[10px] sm:text-xs tracking-widest uppercase mb-4 block">
@@ -139,8 +199,8 @@ export function Capabilities() {
           </h2>
         </motion.div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-24">
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {CARDS.map((card, i) => (
             <CapabilityCard
               key={card.label}
@@ -151,48 +211,17 @@ export function Capabilities() {
           ))}
         </div>
 
-        {/* Stats bar */}
-        <motion.div
-          ref={statsRef}
-          initial={{ opacity: 0, y: 30 }}
-          animate={statsInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 relative z-20"
-          style={{
-            borderTop: '1px solid rgba(232,161,32,0.3)',
-            borderBottom: '1px solid rgba(232,161,32,0.3)',
-            background: 'linear-gradient(90deg, rgba(232,161,32,0.02), rgba(232,161,32,0.05), rgba(232,161,32,0.02))'
-          }}
-        >
-          {/* Subtle pulse on stats entry */}
-          {statsInView && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="absolute inset-0 pointer-events-none"
-              style={{ boxShadow: 'inset 0 0 40px rgba(232,161,32,0.1)' }}
-            />
-          )}
-
-          {[
-            { label: 'SYSTEMS DEPLOYED',    val: '240+' },
-            { label: 'DAILY COMPILATIONS',  val: '1.2K' },
-            { label: 'LINES OF CODE',       val: '18M+' },
-            { label: 'COMPLEX BUILDS',      val: '40+'  },
-          ].map((stat, i) => (
-            <div key={i} className="text-center">
-              <span className="block font-sans text-[10px] sm:text-xs text-[#9CA3AF] tracking-widest uppercase mb-3">
-                {stat.label}
-              </span>
-              <span className="font-bebas text-4xl sm:text-6xl text-[#e8a120] block tracking-wide">
-                <AnimatedCounter value={stat.val} inView={statsInView} />
-              </span>
-            </div>
-          ))}
-        </motion.div>
-
       </div>
+
+      {/* ── Stats Marquee — full bleed, below the cards ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
+      >
+        <StatMarquee />
+      </motion.div>
+
     </section>
   );
 }

@@ -12,6 +12,7 @@ import { ContactSection } from './components/ContactSection.jsx';
 import { Footer } from './components/Footer.jsx';
 import { CelestialCanvas } from './components/DensePcbCanvas.jsx';
 import { FreyTransition } from './components/FreyTransition.jsx';
+import { useHeroFrames } from './hooks/useHeroFrames.js';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -22,6 +23,9 @@ export default function App() {
 
   // Scroll Progress Thread
   const { scrollYProgress } = useScroll();
+
+  // Hero frames preloader
+  const { isLoaded: isFramesLoaded, images: heroFrames } = useHeroFrames();
 
   // Always reset scroll position to topmost part of the page on refresh
   useEffect(() => {
@@ -51,22 +55,43 @@ export default function App() {
     // Lock body scroll while splash is visible (prevents scroll bleed-through)
     document.body.style.overflow = 'hidden';
 
-    // Phase 4 (4000ms): curtains open — release scroll lock immediately
-    const unlockTimer = setTimeout(() => {
+    // Phase 4 (4000ms): curtains open — release scroll lock immediately, but wait for frames too
+    const minimumTimePassed = new Promise(resolve => setTimeout(resolve, 4000));
+    
+    // We wait for both the minimum splash duration AND the frames to preload
+    Promise.all([
+      minimumTimePassed,
+      // Create a promise that resolves when isFramesLoaded becomes true
+      new Promise(resolve => {
+        if (isFramesLoaded) resolve();
+        else {
+          const interval = setInterval(() => {
+            if (isFramesLoaded) {
+              clearInterval(interval);
+              resolve();
+            }
+          }, 100);
+          
+          // Fallback: don't wait forever, max 8 seconds total
+          setTimeout(() => {
+            clearInterval(interval);
+            resolve();
+          }, 8000);
+        }
+      })
+    ]).then(() => {
       document.body.style.overflow = '';
-    }, 4000);
-
-    // Phase 5 (5200ms): fully unmount splash DOM node
-    const removeTimer = setTimeout(() => {
-      setShowSplash(false);
-    }, 5200);
+      
+      // Phase 5: fully unmount splash DOM node shortly after curtains open
+      setTimeout(() => {
+        setShowSplash(false);
+      }, 1200);
+    });
 
     return () => {
-      clearTimeout(unlockTimer);
-      clearTimeout(removeTimer);
       document.body.style.overflow = '';
     };
-  }, []);
+  }, [isFramesLoaded]);
 
   return (
     <>
@@ -88,25 +113,24 @@ export default function App() {
 
       <CelestialCanvas />
 
-      {/* Render Order: Hero -> Services -> Team -> Transition -> Projects -> Contact -> Footer */}
-      <HeroSection />
+      {/* Hero Section Container (Sticky) */}
+      <HeroSection images={heroFrames} splashDone={!showSplash} />
 
-      <Capabilities />
-
-      <TeamSection />
-
-      <FreyTransition />
-
-      <ProjectsSection
-        activeProjectTab={activeProjectTab}
-        setActiveProjectTab={setActiveProjectTab}
-        currentSelectedProject={currentSelectedProject}
-        setCurrentSelectedProject={setCurrentSelectedProject}
-      />
-
-      <ContactSection />
-
-      <Footer />
+      {/* Main Content (Scrolls over the sticky hero section) */}
+      {/* We pull this up by 100vh so it slides over the Hero section before it un-sticks */}
+      <div className="relative z-20 bg-[#0a0a0a]" style={{ marginTop: '-100vh' }}>
+        <Capabilities />
+        <TeamSection />
+        <FreyTransition />
+        <ProjectsSection
+          activeProjectTab={activeProjectTab}
+          setActiveProjectTab={setActiveProjectTab}
+          currentSelectedProject={currentSelectedProject}
+          setCurrentSelectedProject={setCurrentSelectedProject}
+        />
+        <ContactSection />
+        <Footer />
+      </div>
     </>
   );
 }

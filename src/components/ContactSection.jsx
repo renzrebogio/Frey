@@ -38,12 +38,17 @@ export function ContactSection() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !email || !message) return;
+    
     setIsSubmitting(true);
+    
+    const formattedMessage = `Hi Frey Collective!\n\nName: ${name}\nEmail: ${email}\nProject Type: ${projectType}\nBudget: ${budget}\n\nMessage:\n${message}`;
+    const messengerUrl = `https://m.me/buildwithfrey?text=${encodeURIComponent(formattedMessage)}`;
+
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitSuccess(true);
       setTerminalPayload({
-        status: 'INQUIRY_RECEIVED',
+        status: 'REDIRECT_TO_MESSENGER',
         timestamp: new Date().toISOString(),
         ref: `FREY-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
         payload: {
@@ -51,10 +56,16 @@ export function ContactSection() {
           clientEmail: email,
           projectType,
           budget,
-          messageLength: message.length,
+          action: 'Messenger Redirect Initiated'
         },
       });
-    }, 1500);
+      
+      // Try opening in new tab; fallback to same window if blocked
+      const newWin = window.open(messengerUrl, '_blank');
+      if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+        window.location.href = messengerUrl;
+      }
+    }, 1000);
   };
 
   const resetForm = () => {
@@ -403,9 +414,32 @@ export function ContactSection() {
                         [RECEIVED]
                       </span>
                     </div>
-                    <pre className="text-[11px] leading-tight overflow-x-auto max-h-[140px] font-mono-code select-text whitespace-pre-wrap text-[#6B7280]">
-                      {JSON.stringify(terminalPayload, null, 2)}
-                    </pre>
+                    <div className="text-[11px] leading-relaxed font-mono-code select-text text-[#9CA3AF] space-y-2.5">
+                      <div className="flex justify-between items-end border-b border-dashed border-white/10 pb-2">
+                        <span className="text-[#6B7280] tracking-widest uppercase text-[9px]">Status</span>
+                        <span className="text-[#e8a120] tracking-wider">{terminalPayload?.status?.replace(/_/g, ' ')}</span>
+                      </div>
+                      <div className="flex justify-between items-end border-b border-dashed border-white/10 pb-2">
+                        <span className="text-[#6B7280] tracking-widest uppercase text-[9px]">Date</span>
+                        <span className="tracking-wider">{terminalPayload?.timestamp ? new Date(terminalPayload.timestamp).toLocaleString() : ''}</span>
+                      </div>
+                      <div className="flex justify-between items-end border-b border-dashed border-white/10 pb-2">
+                        <span className="text-[#6B7280] tracking-widest uppercase text-[9px]">Client</span>
+                        <span className="tracking-wider">{terminalPayload?.payload?.clientName}</span>
+                      </div>
+                      <div className="flex justify-between items-end border-b border-dashed border-white/10 pb-2">
+                        <span className="text-[#6B7280] tracking-widest uppercase text-[9px]">Email</span>
+                        <span className="tracking-wider">{terminalPayload?.payload?.clientEmail}</span>
+                      </div>
+                      <div className="flex justify-between items-end border-b border-dashed border-white/10 pb-2">
+                        <span className="text-[#6B7280] tracking-widest uppercase text-[9px]">Project Type</span>
+                        <span className="uppercase tracking-wider">{terminalPayload?.payload?.projectType}</span>
+                      </div>
+                      <div className="flex justify-between items-end">
+                        <span className="text-[#6B7280] tracking-widest uppercase text-[9px]">Budget</span>
+                        <span className="uppercase tracking-wider">{terminalPayload?.payload?.budget}</span>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="pt-4 flex items-center justify-between" style={{ borderTop: '1px solid rgba(232,161,32,0.08)' }}>

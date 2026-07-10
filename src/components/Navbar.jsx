@@ -119,7 +119,25 @@ export function Navbar({ isScrolled, mobileMenuOpen, setMobileMenuOpen }) {
       </div>
 
       {/* Right actions */}
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
+        {/* Desktop CTA */}
+        <button
+          type="button"
+          onClick={() => handleScrollTo('contact')}
+          className="hidden md:inline-flex items-center gap-2 px-5 py-2 font-sans text-[10px] font-bold tracking-[0.18em] uppercase cursor-pointer transition-all duration-300 hover:opacity-90 active:scale-95"
+          style={{
+            background: 'linear-gradient(135deg, #e8a120 0%, #c48212 100%)',
+            color: '#0a0a0a',
+            borderRadius: '2px',
+            boxShadow: '0 4px 16px rgba(232,161,32,0.25)',
+          }}
+        >
+          Build with Frey
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+
         {/* Mobile menu toggle */}
         <button
           type="button"
