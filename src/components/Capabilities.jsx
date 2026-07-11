@@ -5,7 +5,6 @@ import { GOLD, GOLD_BRIGHT } from "../data";
 /* ── Animated Counter ── */
 function AnimatedCounter({ value, inView }) {
   const [count, setCount] = useState(0);
-
   useEffect(() => {
     if (!inView) {
       setCount(0);
@@ -15,21 +14,17 @@ function AnimatedCounter({ value, inView }) {
     if (isNaN(end)) return;
     const duration = 2000;
     const start = performance.now();
-
     const tick = (now) => {
       const t = Math.min((now - start) / duration, 1);
       const ease = 1 - Math.pow(1 - t, 4);
       setCount(end * ease);
       if (t < 1) requestAnimationFrame(tick);
     };
-
     requestAnimationFrame(tick);
   }, [inView, value]);
-
   const suffix = value.replace(/[0-9.]/g, "");
   const display =
     count < 10 && count % 1 !== 0 ? count.toFixed(1) : Math.floor(count);
-
   return (
     <>
       {display}
@@ -133,7 +128,7 @@ function CapabilityCard({ icon, label, title, desc, index, inView }) {
             stiffness: 120,
             delay: 0.4 + index * 0.18,
           }}
-          className="p-3.5 rounded-xl bg-[rgba(232,161,32,0.04)] border border-[rgba(232,161,32,0.15)] text-[#e8b84b] group-hover:text-white group-hover:bg-[rgba(232,161,32,0.25)] group-hover:border-[#e8a120] group-hover:scale-110 transition-all duration-300"
+          className="p-3.5 rounded-xl bg-[rgba(232,161,32,0.04)] border border-[rgba(232,161,32,0.1)] text-[#e8b84b] group-hover:text-white group-hover:bg-[rgba(232,161,32,0.25)] group-hover:border-[#e8a120] group-hover:scale-110 transition-all duration-300"
         >
           <svg
             className="w-6 h-6 transform group-hover:rotate-[-8deg] transition-transform duration-300"
@@ -285,9 +280,9 @@ export function Capabilities() {
                 height="80"
                 rx="4"
                 fill="none"
-                stroke="#e8a120"
-                strokeWidth="2.5"
-                strokeOpacity="1.7"
+                stroke="white"
+                strokeWidth="5.5"
+                strokeOpacity="5.7"
               />
               <rect
                 x="72"
@@ -296,20 +291,20 @@ export function Capabilities() {
                 height="56"
                 rx="2"
                 fill="none"
-                stroke="#e8a120"
+                stroke="white"
                 strokeWidth="0.5"
-                strokeOpacity="0.4"
+                strokeOpacity="5.4"
                 strokeDasharray="2 2"
               />
               <text
                 x="100"
                 y="104"
                 textAnchor="middle"
-                fill="#e8a120"
+                fill="white"
                 fontSize="10"
                 fontFamily="monospace"
                 letterSpacing="1"
-                opacity="0.6"
+                opacity="5.6"
               >
                 ARM-MCU
               </text>
@@ -323,7 +318,7 @@ export function Capabilities() {
                       y1="48"
                       x2={step}
                       y2="60"
-                      stroke="#e8a120"
+                      stroke="white"
                       strokeWidth="1"
                     />
                     <circle cx={step} cy="46" r="1.5" fill="#e8a120" />
@@ -400,6 +395,8 @@ export function Capabilities() {
         />
       </div>
 
+      {/* ── INITIAL SCROLL EFFECTS REVERTED ── */}
+      {/* Handled your exact original line layout structure & duration timing */}
       {isInView && (
         <motion.div
           initial={{ top: "0%" }}
