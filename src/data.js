@@ -1,7 +1,8 @@
-import dImg from './uploads/d.png';
-import eImg from './uploads/e.png';
-import rImg from './uploads/r.png';
-import zImg from './uploads/z.png';
+import dImg from './uploads/d.webp';
+import eImg from './uploads/e.webp';
+import rImg from './uploads/r.webp';
+import zImg from './uploads/z.webp';
+import tImg from "./uploads/t.webp";
 import garageImg from './uploads/projects/garagedooriot.jpg';
 import sneakerImg from './uploads/projects/sneakerlab.png';
 import brewImg from './uploads/projects/brew.png';
@@ -110,26 +111,41 @@ export const GOLD_GLOW = '#f0c040';
 export const IMAGES = [
   {
     src: dImg,
-    name: 'RANDEL',
-    role: 'Frontend Developer',
-    statement: 'I design and implement responsive, high-fidelity user interfaces. My core focus is on smooth interactions, pixel-level layouts, and robust React frontend structures.',
+    fullName: "JOHN RANDEL SOROSORO",
+    nickName: "RANDEL",
+    role: "Frontend Developer",
+    statement:
+      "I design and implement responsive, high-fidelity user interfaces. My core focus is on smooth interactions, pixel-level layouts, and robust React frontend structures.",
   },
   {
     src: zImg,
-    name: 'GRAZIELLE',
-    role: 'Researcher & Operations',
-    statement: 'I lead market research, manage operational pipelines, and handle all regulatory paper works to ensure structural clarity and seamless execution of our designs.',
+    fullName: "GRAZIELLE NYCHOLE DELA CRUZ",
+    nickName: "GRAZIELLE",
+    role: "Researcher & Operations",
+    statement:
+      "I lead market research, manage operational pipelines, and handle all regulatory paper works to ensure structural clarity and seamless execution of our designs.",
   },
   {
     src: rImg,
-    name: 'RENZ MARTIN',
-    role: 'Frontend Developer',
-    statement: 'I build reactive, visually immersive digital ecosystems. My love is merging futuristic aesthetics with clean, modular, and performance-tuned code.',
+    fullName: "RENZ MARTIN REBOGIO",
+    nickName: "RENZ MARTIN",
+    role: "Frontend Developer",
+    statement:
+      "I build reactive, visually immersive digital ecosystems. My love is merging futuristic aesthetics with clean, modular, and performance-tuned code.",
   },
   {
     src: eImg,
-    name: 'ELIJAH BOON',
-    role: 'Backend Developer',
-    statement: 'I architect secure and scalable backend logic, database integrations, and high-performance server APIs to sustain heavy user traffic behind the scenes.',
+    nickName: "ELIJAH BOON",
+    role: "Backend Developer",
+    statement:
+      "I architect secure and scalable backend logic, database integrations, and high-performance server APIs to sustain heavy user traffic behind the scenes.",
+  },
+  {
+    src: tImg,
+    fullName: "TRISHA JANE JAVIER",
+    nickName: "TRISHIA",
+    role: "Researcher & Operations",
+    statement:
+      "I drive deep analytical insights, streamline cross-functional workflows, and optimize operational strategies to keep our project development fully aligned and structured.",
   },
 ];
